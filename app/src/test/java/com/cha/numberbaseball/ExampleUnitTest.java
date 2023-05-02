@@ -1,4 +1,4 @@
-package com.example.tp01_numbergame;
+package com.cha.numberbaseball;
 
 import org.junit.Test;
 

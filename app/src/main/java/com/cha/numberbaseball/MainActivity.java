@@ -1,4 +1,4 @@
-package com.example.tp01_numbergame;
+package com.cha.numberbaseball;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,8 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import com.cha.NumberBaseball.R;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {

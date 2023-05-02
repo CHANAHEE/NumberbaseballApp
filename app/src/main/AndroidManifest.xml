@@ -10,10 +10,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TP01_NumberGame"
+        android:theme="@style/Theme.NumberBaseball"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.cha.numberbaseball.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

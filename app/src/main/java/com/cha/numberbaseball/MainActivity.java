@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.tp01_numbergame.R;
-
+import com.cha.NumberBaseball.R;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {

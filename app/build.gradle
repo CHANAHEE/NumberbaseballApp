@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.tp01_numbergame'
+    namespace 'com.cha.NumberBaseball'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.tp01_numbergame"
+        applicationId "com.cha.NumberBaseball"
         minSdk 24
         targetSdk 33
         versionCode 1

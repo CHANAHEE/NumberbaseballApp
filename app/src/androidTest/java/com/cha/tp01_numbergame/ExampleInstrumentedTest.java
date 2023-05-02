@@ -1,4 +1,4 @@
-package com.example.tp01_numbergame;
+package com.cha.tp01_numbergame;
 
 import android.content.Context;
 

@@ -4,33 +4,36 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.cha.NumberBaseball.R;
+import com.cha.NumberBaseball.databinding.ActivityMainBinding;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    ActivityMainBinding binding;
     Button[] btnArr = new Button[10];
-    TextView num1,num2,num3,strike,ball,out,gameResult,round,refResult1, refResult2,ballResult1,ballResult2;
+    TextView num1,num2,num3,strike,ball,out,gameResult,round,ballResult1,ballResult2;
     int roundCount = 1, strikeNum=0, ballNum=0, outNum=0;
     int answer100,answer10,answer1;
-    Random rand = new Random();
+
     String numResult = "", ballResult = "";
     Button retryBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+        initial();
+    }
 
-        // 버튼 배열 id 대입
-        for(int i = 0; i < 10 ; i++){
-            btnArr[i] = findViewById(R.id.btn0++);
-        }
+
+    private void initial(){
         // 뷰 객체 id 대입
-        retryBtn = findViewById(R.id.btn_retry);
         num1 = findViewById(R.id.num1);
         num2 = findViewById(R.id.num2);
         num3 = findViewById(R.id.num3);
@@ -40,62 +43,55 @@ public class MainActivity extends AppCompatActivity {
         out = findViewById(R.id.out);
 
         gameResult = findViewById(R.id.gameResult);
-        refResult1 = findViewById(R.id.refResult1);
-        refResult2 = findViewById(R.id.refResult2);
-        ballResult1 = findViewById(R.id.ballResult1);
         ballResult2 = findViewById(R.id.ballResult2);
         round = findViewById(R.id.round);
+
+
+
         round.setText( roundCount +"");
         round.setVisibility(View.VISIBLE);
 
         // 컴퓨터 정답 만들기
         setAnswer();
+
         // 버튼 리스너
-        for(int i = 0; i< 10; i++){
-            btnArr[i].setOnClickListener(listener);
-        }
-        retryBtn.setOnClickListener(listener_retry);
+        btnArr = new Button[]{binding.btn0, binding.btn1, binding.btn2, binding.btn3, binding.btn4, binding.btn5, binding.btn6, binding.btn7, binding.btn8, binding.btn9};
+        for (Button button : btnArr) button.setOnClickListener(listener);
 
+
+        binding.btnRetry.setOnClickListener((v)->retryEvent());
     }
-
     // 버튼을 누르면, num1,num2,num3 에 작성하는 setNumber() 와 버튼의 select 여부를 체크해서
     //
-    private final View.OnClickListener listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Button btn = (Button) v;
-            setBtnNumber(btn);
-            allBtnChecked();
-        }
+    private final View.OnClickListener listener = (view)->{
+        setSelectNumber((Button) view);
+        selectedAll();
     };
 
     // 각각 초기상태로 돌려놓는다.
-    View.OnClickListener listener_retry = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            gameResult.setVisibility(View.GONE);
-            for(int i = 0; i < 10; i++){
-                btnArr[i].setEnabled(true);
-                btnArr[i].setBackgroundColor(Color.parseColor("#9CB580"));
-                btnArr[i].setTextColor(Color.parseColor("#FFFFFF"));
-            }
-
-            refResult1.setText("");
-            refResult2.setText("");
-            ballResult1.setText("");
-            ballResult2.setText("");
-
-            numResult = "";
-            ballResult = "";
-
-            retryBtn.setVisibility(View.INVISIBLE);
-
-            strike.setText("0");
-            roundCount = 1;
-            round.setText("1");
-            setAnswer();
+    private void retryEvent(){
+        binding.gameResult.setVisibility(View.GONE);
+        for(int i = 0; i < 10; i++){
+            btnArr[i].setEnabled(true);
+            btnArr[i].setBackgroundColor(Color.parseColor("#9CB580"));
+            btnArr[i].setTextColor(Color.parseColor("#FFFFFF"));
         }
-    };
+
+        binding.resultBoard1.setText("");
+        binding.resultBoard2.setText("");
+        ballResult1.setText("");
+        ballResult2.setText("");
+
+        numResult = "";
+        ballResult = "";
+
+        retryBtn.setVisibility(View.INVISIBLE);
+
+        strike.setText("0");
+        roundCount = 1;
+        round.setText("1");
+        setAnswer();
+    }
 
     // strike, ball, out 을 체크해서 화면에 표시, 승리 조건인지 판단, round 수 갱신
     public void inputNumber(){
@@ -159,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
                     + " " + num2.getText().toString()
                     + " " + num3.getText().toString() + "\n";
             ballResult += strikeNum + " S  " + ballNum + " B"+"\n";
-            refResult1.setText(numResult);
-            ballResult1.setText(ballResult);
+            binding.resultBoard1.setText(numResult);
+            binding.ballResult1.setText(ballResult);
         } else if(roundCount < 19){
             if(roundCount == 10) {
                 numResult = "";
@@ -170,14 +166,14 @@ public class MainActivity extends AppCompatActivity {
                     + " " + num2.getText().toString() + " "
                     + num3.getText().toString() + "\n";
             ballResult += strikeNum + " S  " + ballNum + " B"+"\n";
-            refResult2.setText(numResult);
+            binding.resultBoard2.setText(numResult);
             ballResult2.setText(ballResult);
         } else {
             if(roundCount == 19) {
                 numResult = "";
                 ballResult = "";
-                refResult1.setText("");
-                refResult2.setText("");
+                binding.resultBoard1.setText("");
+                binding.resultBoard2.setText("");
                 ballResult1.setText("");
                 ballResult2.setText("");
             }
@@ -185,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                     + " " + num2.getText().toString() + " "
                     + num3.getText().toString() + "\n";
             ballResult += strikeNum + " S  " + ballNum + " B"+"\n";
-            refResult1.setText(numResult);
+            binding.resultBoard1.setText(numResult);
             ballResult1.setText(ballResult);
         }
     }
@@ -220,50 +216,48 @@ public class MainActivity extends AppCompatActivity {
     }
     // 버튼 select 여부를 확인하여, select 되어있으면, select 을 취소 하고 버튼색, 글씨색을 원래대로 바꾸고, 선택 숫자를 지운다.
     // select 이 안되어있으면 버튼색, 글씨색을 바꾸고, 선택숫자에 기입한다. select 여부를 true 로 바꾼다.
-    public void setBtnNumber (Button btn){
-
-
-        if(!btn.isSelected()) {
-            if (num1.getText().equals("")) num1.setText(btn.getText());
-            else if (num2.getText().equals("")) num2.setText(btn.getText());
-            else num3.setText(btn.getText());
-            btn.setBackgroundColor(Color.parseColor("#FF555950"));
-            btn.setTextColor(Color.parseColor("#FF2C2B2B"));
-            btn.setSelected(true);
-        }else{
-            if (num3.getText().equals(btn.getText())) num3.setText("");
-            else if (num2.getText().equals(btn.getText())) num2.setText("");
-            else num1.setText("");
+    public void setSelectNumber (Button btn){
+        if(btn.isSelected()) {
+            if (binding.num3.getText().equals(btn.getText())) binding.num3.setText("");
+            else if (binding.num2.getText().equals(btn.getText())) binding.num2.setText("");
+            else binding.num1.setText("");
             btn.setBackgroundColor(Color.parseColor("#9CB580"));
             btn.setTextColor(Color.parseColor("#FFFFFF"));
             btn.setSelected(false);
+        }else{
+            if (binding.num1.getText().equals("")) binding.num1.setText(btn.getText());
+            else if (binding.num2.getText().equals("")) binding.num2.setText(btn.getText());
+            else binding.num3.setText(btn.getText());
+            btn.setBackgroundColor(Color.parseColor("#FF555950"));
+            btn.setTextColor(Color.parseColor("#FF2C2B2B"));
+            btn.setSelected(true);
         }
     }
 
     // 선택되어 있는 버튼이 총 3개이면 선택이 완료된거니, 모든 버튼을 선택불가하게 만든다. 그리고
     // inputNumber() 를 이용하여 선택한 숫자와 정답을 비교 하고, init() 으로 초기화하여 다음 라운드 진행.
-    public void allBtnChecked(){
-        int count = 0;
-        for(Button b : btnArr) if(b.isSelected()) count++;
+    public void selectedAll(){
 
-        if(count == 3){
-            for(int i = 0; i < 10; i++){
-                btnArr[i].setSelected(false);
-            }
-
-            inputNumber();
-            init();
-        }
-
+        if(binding.num1.getText().equals("")
+                || binding.num2.getText().equals("")
+                || binding.num3.getText().equals("") ) return;
+        for(int i = 0; i < 10; i++) btnArr[i].setSelected(false);
+        inputNumber();
+        init();
     }
 
-    // 컴퓨터 정답 만들기. 중복은 빼야한다. 중복처리를 위해 자릿수 마다 랜덤함수를 돌렸음.
-    public void setAnswer(){
 
+
+    /*
+    *
+    *       정답 만들기. 중복은 빼야한다. 중복처리를 위해 자릿수 마다 랜덤함수를 돌렸음.
+    *
+    * */
+    public void setAnswer(){
+        Random rand = new Random();
         answer100 = rand.nextInt(10);
         while(answer100 == answer10) answer10 = rand.nextInt(10);
         while(answer100 == answer1 || answer10 == answer1) answer1 = rand.nextInt(10);
-
     }
 }
 
